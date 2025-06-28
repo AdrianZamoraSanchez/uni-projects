@@ -1,0 +1,14 @@
+FROM eclipse-temurin:21-jdk-alpine
+WORKDIR /app
+
+# Crear estructura de directorios
+RUN mkdir -p /uploads/img/event && \
+    chmod -R 777 /uploads
+
+# Copia la imagen local al contenedor
+COPY src/main/resources/static/img/event/default-event.png /app/assets/default-event.png
+
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]

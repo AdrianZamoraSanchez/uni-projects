@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	<head>
+	    <title>Página principal</title>
+	    <meta charset="UTF-8">
+		<link rel="stylesheet" href="/css/styles.css">
+		<!-- Bootstrap CDN -->
+	  	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		
+		<style>
+			.filters-container {
+			  padding: 1rem 2rem;
+			  box-sizing: border-box;
+			  width: 100%;
+			  background-color: var(--secondary-color);
+			}
+
+			.filters-columns {
+			  display: grid;
+			  grid-template-columns: 25vw 25vw 25vw 25vw; /* Columnas de filtros */
+			  gap: 2rem;
+			  align-items: start;
+			}
+
+			.filter-column {
+			  display: flex;
+			  flex-direction: column;
+			  gap: 0.75rem;
+			}
+
+			/* Categorías que están en grid */
+			.categories-grid {
+			  display: grid;
+			  grid-template-columns: repeat(3, max-content);
+			  gap: 0.5rem 1.5rem;
+			}
+
+			/* Select del aforo */
+			.filter-column select {
+			  max-width: 150px;
+			  width: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Nav Menu -->
+        <div th:replace="~{fragments/navMenu :: navMenu}"></div>
+		
+		<main>
+		<!-- Filtros -->
+		<form action="/event/search" method="get" class="filters-container">
+			<div class="filters-columns">
+				<!-- Filtro de categoría -->
+				<div class="filter-column">
+					<label class="form-label">Categorías:</label>
+					<div class="categories-grid">
+						<div class="form-check" th:each="cat : ${T(ubu.adrian.taller.model.Categories).values()}">
+							<input class="form-check-input"
+								type="checkbox"
+								th:id="${cat}"
+								th:name="categories[]"
+								th:value="${cat}"
+								th:checked="${selectedCategories != null and selectedCategories.contains(cat)}">
+							<label class="form-check-label" th:for="${cat}" th:text="${cat}"></label>
+						</div>
+					</div>
+				</div>
+
+				<!-- Filtro de aforo -->
+				<div class="filter-column">
+					<label for="capacity">Aforo:</label>
+					<select name="capacity" id="capacity">
+						<option value="" th:selected="${selectedCapacity == null or selectedCapacity == ''}">Todos</option>
+						<option value="AVAILABLE" th:selected="${selectedCapacity == 'AVAILABLE'}">Con plazas disponibles</option>
+						<option value="FULL" th:selected="${selectedCapacity == 'FULL'}">Aforo completo</option>
+					</select>
+				</div>
+
+				<!-- Igual pongo otro más -->
+				<div class="filter-column">
+					
+				</div>
+			</div>
+
+			<button type="submit">Filtrar</button>
+		</form>
+
+		<!-- Lista de eventos -->
+        <div class="m-3">
+            <p th:if="${#lists.isEmpty(eventList)}">No hay eventos disponibles actualmente.</p>
+
+			<div class="m-3">				
+		        <div class="row row-cols-1 row-cols-md-3 g-4">
+		            <div th:each="event : ${eventList}" class="col">
+		                <!-- Enlace que envuelve la tarjeta -->
+		                <a th:href="@{'/event/info/' + ${event.id}}" style="text-decoration: none; color: inherit;">
+		                    <div class="card h-100 shadow-sm">
+		                        <img th:src="@{'/img/event/' + ${event.imagen}}" 
+		                             th:alt="${event.title}" 
+		                             class="card-img-top"
+		                             style="width: 100%; max-height: 200px; object-fit: cover;">
+		                        
+		                        <div class="card-body">
+		                            <h5 class="card-title" th:text="${event.title}">Event Title</h5>
+		                            <p class="card-text" th:text="${event.description}">Event Description</p>
+		                            <p class="card-text">
+		                                <small class="text-muted" th:text="${event.startDate}">Date</small>
+		                            </p>
+		                        </div>
+		                    </div>
+		                </a>
+		            </div>
+		        </div>
+		    </div>
+        </div>
+		</main>
+		
+		<!-- Footer -->
+	    <div th:replace="~{fragments/footer :: footer}"></div>
+	</body>	
+</html>

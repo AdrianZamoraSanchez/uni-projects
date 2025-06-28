@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: taller
+      MYSQL_USER: appuser
+      MYSQL_PASSWORD: apppass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - app-network
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/taller?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_PROFILES_ACTIVE: docker
+      APP_UPLOAD_DIR: /app/uploads
+      SPRING_RESOURCES_STATIC_LOCATIONS: "classpath:/static/"
+    volumes:
+      - uploads_volume:/app/uploads
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+  uploads_volume:
+    name: taller_uploads
+
+networks:
+  app-network:
+    driver: bridge
