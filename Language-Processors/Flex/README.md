@@ -5,11 +5,9 @@
 
 ```lex lexer.l```
 
-- Compila el archivo C generado.
-Usa un compilador de C, como gcc, para compilar lex.yy.c:
+- Compila el archivo C generado con el nombre lex.yy.c:
 
 ```gcc lex.yy.c -o lexer -lfl```
-Nota: -lfl enlaza las biblioteca libfl (flex library) necesaria.
 
 ## Ejecuta el programa Una vez compilado, puedes ejecutarlo:
 - Se analizar un texto ejecutando el programa y escribiendo en la entrada estándar:
