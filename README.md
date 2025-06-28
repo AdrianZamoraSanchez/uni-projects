@@ -1,2 +1,2 @@
-# uni-projects
-Some of the projects and practices I've done in the during my CS degree in the UBU university
+# Some of my CS exercises
+Some of the projects, practices and general exercises that I've done during my CS degree in the UBU university
