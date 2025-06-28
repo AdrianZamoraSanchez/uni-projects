@@ -1,4 +1,4 @@
-# Algunos de mis ejercicios de Ingeniería Informática
+# Algunos de mis ejercicios de Ingeniería informática
 Estos son algunos de mis proyectos, prácticas y ejercicios, los cuales he realizado durante mi carrera de Ingeniría informática en la UBU (Universidad de Burgos).
 
 # Some of my CS exercises
